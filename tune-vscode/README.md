@@ -73,6 +73,8 @@ You can also use the CLI alongside the extension:
 tune play "Blinding Lights"
 tune pause
 tune next
+tune queue "Heathens"
+tune queue-list
 tune volume 50
 tune status
 tune focus

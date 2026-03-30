@@ -13,6 +13,7 @@ Built for developers who want their music to feel like a native part of their wo
 - ⏯️ **Playback Controls** — Play, pause, skip, go back
 - 🔊 **Volume Control** — Set volume from 0–100
 - 📊 **Now Playing** — See the current track, artist, and album
+- 📋 **Queue Management** — Add songs to queue and view upcoming tracks
 - 🧘 **Focus Mode** — One command to start your deep-work playlist
 - 🔥 **Hype Mode** — Energetic playlist for when you're shipping fast
 - 🔐 **Secure Auth** — OAuth2 with PKCE (no client secret needed)
@@ -89,6 +90,8 @@ A browser window will open asking you to authorize DevTune. Click **"Agree"** an
 | `tune pause` | Pause the current track |
 | `tune next` | Skip to the next track |
 | `tune prev` | Go back to the previous track |
+| `tune queue <song name>` | Add a song to the queue |
+| `tune queue-list` | Show upcoming songs in the queue |
 | `tune volume <0-100>` | Set the playback volume |
 | `tune status` | Show the currently playing track |
 | `tune search <query>` | Search for tracks and list results |
@@ -113,6 +116,13 @@ tune volume 50
 
 # Check what's playing
 tune status
+
+# Queue up songs
+tune queue "Heathens twenty one pilots"
+tune queue "The Nights Avicii"
+
+# View the queue
+tune queue-list
 
 # Enter focus mode
 tune focus

@@ -69,6 +69,57 @@ program
     }
   });
 
+
+// Queue Command
+program
+  .command('queue <song...>')
+  .description('Add a song to the queue')
+  .action(async (songParts: string[]) => {
+    const songName = songParts.join(' ');
+    const spinner = ora(`Adding "${songName}" to queue...`).start();
+    try {
+      const track = await spotifyService.queueTrack(songName);
+      spinner.succeed(chalk.green(`Queued: ${track.name} by ${track.artists.map(a => a.name).join(', ')}`));
+    } catch (error: any) {
+      spinner.fail(chalk.red(`Error: ${error.message}`));
+    }
+  });
+
+// Queue List Command
+program
+  .command('queue-list')
+  .description('Show upcoming songs in the queue')
+  .action(async () => {
+    const spinner = ora('Fetching queue...').start();
+    try {
+      const data = await spotifyService.getQueue();
+      spinner.stop();
+
+      if (data.currently_playing) {
+        const current = data.currently_playing;
+        console.log(chalk.bold.green('\n▶ Now Playing:'));
+        console.log(`  ${chalk.cyan(current.name)} ${chalk.white('by')} ${chalk.yellow(current.artists.map((a: any) => a.name).join(', '))}`);
+      }
+
+      const queue = data.queue || [];
+      if (queue.length === 0) {
+        console.log(chalk.yellow('\nQueue is empty.'));
+        return;
+      }
+
+      console.log(chalk.bold.green(`\n♫ Up Next (${queue.length} tracks):`));
+      queue.slice(0, 10).forEach((t: any, i: number) => {
+        console.log(`  ${chalk.gray(i + 1 + '.')} ${chalk.cyan(t.name)} ${chalk.white('by')} ${chalk.yellow(t.artists.map((a: any) => a.name).join(', '))}`);
+      });
+
+      if (queue.length > 10) {
+        console.log(chalk.gray(`  ...and ${queue.length - 10} more\n`));
+      }
+    } catch (error: any) {
+      spinner.fail(chalk.red(`Error: ${error.message}`));
+    }
+  });
+
 // Next Command
 program
   .command('next')

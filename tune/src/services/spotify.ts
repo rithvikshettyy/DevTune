@@ -75,6 +75,31 @@ class SpotifyService {
     await this.api.play({ context_uri: playlistUri });
   }
 
+  async queueTrack(songName: string) {
+    await this.initialize();
+    const searchResult = await this.api.searchTracks(songName, { limit: 1 });
+    const tracks = searchResult.body.tracks?.items;
+    if (!tracks || tracks.length === 0) {
+      throw new Error(`Song "${songName}" not found.`);
+    }
+    const track = tracks[0];
+    await this.api.addToQueue(track.uri);
+    return track;
+  }
+
+  async getQueue() {
+    await this.initialize();
+    const accessToken = this.api.getAccessToken();
+    const res = await fetch('https://api.spotify.com/v1/me/player/queue', {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    if (!res.ok) {
+      throw new Error('Failed to fetch queue.');
+    }
+    const data = await res.json();
+    return data;
+  }
+
   async getDevices() {
     await this.initialize();
     const result = await this.api.getMyDevices();
