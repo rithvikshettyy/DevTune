@@ -2,7 +2,7 @@
   "name": "tune-vscode",
   "displayName": "Tune CLI (VS Code)",
   "description": "Control Spotify from your status bar - powered by Tune CLI.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "publisher": "RithvikShetty",
   "engines": {
     "vscode": "^1.75.0"

@@ -121,9 +121,8 @@ class TunePlayerViewProvider implements vscode.WebviewViewProvider {
 			enableScripts: true
 		};
 
-		webviewView.webview.html = this._getHtml('', '', false);
+		webviewView.webview.html = this._getHtml();
 
-		// Handle messages from webview
 		webviewView.webview.onDidReceiveMessage(data => {
 			switch (data.command) {
 				case 'play':
@@ -148,7 +147,7 @@ class TunePlayerViewProvider implements vscode.WebviewViewProvider {
 		}
 	}
 
-	private _getHtml(title: string, artist: string, playing: boolean): string {
+	private _getHtml(): string {
 		return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,181 +157,133 @@ class TunePlayerViewProvider implements vscode.WebviewViewProvider {
 	* { margin: 0; padding: 0; box-sizing: border-box; }
 	body {
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		color: var(--vscode-foreground);
 		background: transparent;
-		padding: 16px 12px;
+		color: #e5e5e5;
+		padding: 20px 16px;
+		-webkit-font-smoothing: antialiased;
 	}
+	.player { display: flex; flex-direction: column; align-items: center; gap: 20px; }
 
-	.player {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 16px;
+	/* Disc */
+	.disc-container { position: relative; width: 140px; height: 140px; }
+	.disc {
+		width: 140px; height: 140px; border-radius: 50%;
+		background: conic-gradient(from 0deg, #1a1a1a, #2a2a2a, #111, #222, #1a1a1a);
+		display: flex; align-items: center; justify-content: center;
+		position: relative;
+		box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
 	}
-
-	.album-art {
-		width: 120px;
-		height: 120px;
-		border-radius: 16px;
-		background: linear-gradient(135deg, #1db954, #191414);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 48px;
-		box-shadow: 0 8px 32px rgba(29, 185, 84, 0.3);
-		animation: pulse-glow 3s ease-in-out infinite;
+	.disc.spinning { animation: spin 4s linear infinite; }
+	@keyframes spin { 100% { transform: rotate(360deg); } }
+	.disc-hole {
+		width: 32px; height: 32px; border-radius: 50%;
+		background: #0a0a0a; border: 2px solid rgba(255,255,255,0.06);
 	}
+	.disc-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.03); }
+	.disc-ring-1 { width: 60px; height: 60px; }
+	.disc-ring-2 { width: 90px; height: 90px; }
+	.disc-ring-3 { width: 120px; height: 120px; }
 
-	@keyframes pulse-glow {
-		0%, 100% { box-shadow: 0 8px 32px rgba(29, 185, 84, 0.2); }
-		50% { box-shadow: 0 8px 40px rgba(29, 185, 84, 0.5); }
-	}
-
-	.track-info {
-		text-align: center;
-		width: 100%;
-	}
-
+	/* Track Info */
+	.track-info { text-align: center; width: 100%; padding: 0 4px; }
 	.track-title {
-		font-size: 14px;
-		font-weight: 700;
-		color: var(--vscode-foreground);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		margin-bottom: 4px;
+		font-size: 13px; font-weight: 600; color: #ffffff;
+		letter-spacing: -0.01em; white-space: nowrap;
+		overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
 	}
-
 	.track-artist {
-		font-size: 12px;
-		color: var(--vscode-descriptionForeground);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		font-size: 11px; font-weight: 300; color: rgba(255,255,255,0.4);
+		letter-spacing: 0.02em; white-space: nowrap;
+		overflow: hidden; text-overflow: ellipsis;
 	}
 
-	.idle-msg {
-		font-size: 12px;
-		color: var(--vscode-descriptionForeground);
-		text-align: center;
-	}
-
-	.controls {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-	}
-
+	/* Controls */
+	.controls { display: flex; align-items: center; justify-content: center; gap: 6px; }
 	.ctrl-btn {
-		width: 36px;
-		height: 36px;
-		border: none;
-		border-radius: 50%;
-		background: var(--vscode-button-secondaryBackground);
-		color: var(--vscode-button-secondaryForeground);
-		font-size: 16px;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.15s ease;
+		width: 40px; height: 40px; border: none; border-radius: 50%;
+		background: transparent; color: rgba(255,255,255,0.5);
+		font-size: 14px; cursor: pointer;
+		display: flex; align-items: center; justify-content: center;
+		transition: all 0.2s ease;
 	}
-
-	.ctrl-btn:hover {
-		background: var(--vscode-button-secondaryHoverBackground);
-		transform: scale(1.1);
-	}
-
+	.ctrl-btn:hover { color: #ffffff; background: rgba(255,255,255,0.06); }
 	.ctrl-btn.primary {
-		width: 44px;
-		height: 44px;
-		background: #1db954;
-		color: #fff;
-		font-size: 20px;
+		width: 48px; height: 48px;
+		background: #ffffff; color: #000000; font-size: 18px;
 	}
+	.ctrl-btn.primary:hover { background: rgba(255,255,255,0.9); transform: scale(1.05); }
 
-	.ctrl-btn.primary:hover {
-		background: #1ed760;
-		transform: scale(1.15);
-	}
-
+	/* Misc */
+	.divider { width: 40px; height: 1px; background: rgba(255,255,255,0.06); }
 	.search-btn {
-		width: 100%;
-		padding: 8px 12px;
-		border: 1px solid var(--vscode-input-border);
-		border-radius: 6px;
-		background: var(--vscode-input-background);
-		color: var(--vscode-input-placeholderForeground);
-		font-size: 12px;
-		cursor: pointer;
-		text-align: left;
-		transition: border-color 0.15s ease;
+		width: 100%; padding: 10px 14px;
+		border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+		background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.3);
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 400;
+		cursor: pointer; text-align: left; letter-spacing: 0.02em;
+		transition: all 0.2s ease;
 	}
-
 	.search-btn:hover {
-		border-color: #1db954;
+		border-color: rgba(255,255,255,0.15);
+		background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5);
 	}
-
-	.divider {
-		width: 100%;
-		height: 1px;
-		background: var(--vscode-widget-border);
-		margin: 4px 0;
-	}
-
 	.brand {
-		font-size: 10px;
-		color: var(--vscode-descriptionForeground);
-		text-align: center;
-		opacity: 0.6;
+		font-size: 9px; font-weight: 400; color: rgba(255,255,255,0.15);
+		text-align: center; letter-spacing: 0.1em; text-transform: uppercase;
 	}
+	.status-dot {
+		display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+		background: rgba(255,255,255,0.15); margin-right: 6px; vertical-align: middle;
+	}
+	.status-dot.active {
+		background: #ffffff; box-shadow: 0 0 8px rgba(255,255,255,0.3);
+		animation: pulse 2s ease-in-out infinite;
+	}
+	@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 </style>
 </head>
 <body>
 	<div class="player">
-		<div class="album-art" id="albumArt">🎵</div>
-
+		<div class="disc-container">
+			<div class="disc" id="disc">
+				<div class="disc-ring disc-ring-1" style="position:absolute;"></div>
+				<div class="disc-ring disc-ring-2" style="position:absolute;"></div>
+				<div class="disc-ring disc-ring-3" style="position:absolute;"></div>
+				<div class="disc-hole"></div>
+			</div>
+		</div>
 		<div class="track-info">
-			<div class="track-title" id="trackTitle">Not Playing</div>
+			<div class="track-title" id="trackTitle">
+				<span class="status-dot"></span>Not Playing
+			</div>
 			<div class="track-artist" id="trackArtist">Open Spotify to start</div>
 		</div>
-
 		<div class="controls">
-			<button class="ctrl-btn" onclick="send('prev')" title="Previous">⏮</button>
-			<button class="ctrl-btn primary" onclick="send('play')" id="playBtn" title="Play/Pause">⏯</button>
-			<button class="ctrl-btn" onclick="send('next')" title="Next">⏭</button>
+			<button class="ctrl-btn" onclick="send('prev')" title="Previous">&#9198;</button>
+			<button class="ctrl-btn primary" onclick="send('play')" id="playBtn" title="Play/Pause">&#9654;</button>
+			<button class="ctrl-btn" onclick="send('next')" title="Next">&#9197;</button>
 		</div>
-
 		<div class="divider"></div>
-
-		<button class="search-btn" onclick="send('search')">🔍 Search for a song...</button>
-
-		<div class="brand">Powered by Tune CLI</div>
+		<button class="search-btn" onclick="send('search')">Search for a song...</button>
+		<div class="brand">DevTune</div>
 	</div>
-
 	<script>
 		const vscode = acquireVsCodeApi();
-
-		function send(cmd) {
-			vscode.postMessage({ command: cmd });
-		}
-
+		function send(cmd) { vscode.postMessage({ command: cmd }); }
 		window.addEventListener('message', event => {
 			const data = event.data;
 			if (data.type === 'update') {
 				const titleEl = document.getElementById('trackTitle');
 				const artistEl = document.getElementById('trackArtist');
-				const artEl = document.getElementById('albumArt');
-
+				const disc = document.getElementById('disc');
 				if (data.title) {
-					titleEl.textContent = data.title;
-					artistEl.textContent = data.artist || 'Unknown Artist';
-					artEl.textContent = '🎶';
+					titleEl.innerHTML = '<span class="status-dot active"></span>' + data.title;
+					artistEl.textContent = data.artist || 'Unknown';
+					disc.classList.add('spinning');
 				} else {
-					titleEl.textContent = 'Not Playing';
+					titleEl.innerHTML = '<span class="status-dot"></span>Not Playing';
 					artistEl.textContent = 'Open Spotify to start';
-					artEl.textContent = '🎵';
+					disc.classList.remove('spinning');
 				}
 			}
 		});

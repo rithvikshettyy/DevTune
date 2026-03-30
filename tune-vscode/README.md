@@ -1,45 +1,46 @@
-# 🎵 Tune CLI (VS Code)
+# Tune CLI — Spotify for VS Code
 
-**Control Spotify directly from your VS Code editor** — no more switching windows just to skip a song.
+Control Spotify playback directly from your editor. No window switching, no distractions.
 
-Tune CLI integrates seamlessly into your IDE with a **sidebar player**, **status bar track display**, and **command palette controls**, so your music never interrupts your flow.
+Tune CLI adds a sidebar player and status bar integration to VS Code, giving you full playback control while you code.
 
 ---
 
-## ✨ Features
+## Features
 
-### 🎛️ Sidebar Player
-A beautiful mini-player right in your Activity Bar with:
-- **Album art placeholder** with animated glow
-- **Track title & artist** display
-- **Playback controls** — Previous, Play/Pause, Next
-- **Search bar** — Find and play any song without leaving VS Code
+### Sidebar Player
+A minimal music player built into the Activity Bar. Displays the current track, artist, and provides playback controls — all without leaving your editor.
 
-### 📊 Status Bar
-See what's currently playing at the bottom of your editor:
-- Shows `🎵 Song Name - Artist` when music is playing
-- Updates automatically every 10 seconds
+- Vinyl disc animation synced to playback state
+- Previous / Play-Pause / Next controls
+- Inline search to find and play any track
 
-### ⌨️ Command Palette
-Press `Ctrl+Shift+P` and type **"Tune"** to access:
+### Status Bar
+The currently playing track appears in the bottom status bar, updating automatically every 10 seconds.
+
+### Command Palette
+All controls are accessible via `Ctrl+Shift+P`:
 
 | Command | Action |
-| :--- | :--- |
-| `Tune: Play/Pause` | Toggle playback |
-| `Tune: Next Track` | Skip to next song |
-| `Tune: Previous Track` | Go back |
-| `Tune: Show Status` | Show a notification with current track |
-| `Tune: Search & Play` | Search for any song and play it |
+| --- | --- |
+| Tune: Play/Pause | Toggle playback |
+| Tune: Next Track | Skip forward |
+| Tune: Previous Track | Skip back |
+| Tune: Show Status | Display current track info |
+| Tune: Search & Play | Search and play a song |
 
 ---
 
-## 🚀 Getting Started
+## Prerequisites
 
-### Prerequisites
-1. **Spotify Premium** account (required for playback control)
-2. **Tune CLI** installed globally on your system
+1. A **Spotify Premium** account (required for playback control via the Web API)
+2. **Tune CLI** installed globally
 
-### Install Tune CLI
+---
+
+## Setup
+
+Clone the repository and install the CLI:
 
 ```bash
 git clone https://github.com/rithvikshettyy/DevTune.git
@@ -49,51 +50,49 @@ npm run build
 npm link
 ```
 
-### Authenticate
+Create a Spotify app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) with redirect URI `http://127.0.0.1:8888/callback`, then configure and authenticate:
 
 ```bash
+tune config set clientId YOUR_CLIENT_ID
 tune login
 ```
 
-This opens your browser for Spotify authorization. Once done, the extension works automatically!
+The extension will begin working immediately after authentication.
 
 ---
 
-## 🎮 Usage
+## CLI Reference
 
-### From the Sidebar
-1. Click the **🎵 music icon** on the left Activity Bar
-2. Use the **⏮ ⏯ ⏭** buttons to control playback
-3. Click **🔍 Search for a song...** to find and play tracks
+The extension is powered by the Tune CLI. These commands are also available in your terminal:
 
-### From the Terminal
-You can also use the CLI alongside the extension:
-
-```bash
-tune play "Blinding Lights"
-tune pause
-tune next
-tune queue "Heathens"
-tune queue-list
-tune volume 50
-tune status
-tune focus
+```
+tune play <song>        Search and play a track
+tune pause              Pause playback
+tune next               Skip to next track
+tune prev               Previous track
+tune queue <song>       Add a track to the queue
+tune queue-list         View upcoming tracks
+tune volume <0-100>     Set volume
+tune status             Show current track
+tune search <query>     Search for tracks
+tune focus              Start focus playlist
+tune hype               Start hype playlist
 ```
 
 ---
 
-## 🔐 Privacy & Security
+## Privacy
 
-- **OAuth2 + PKCE** — No client secret stored or transmitted
-- **Local storage only** — Tokens are kept on your machine at `~/.tune/config.json`
-- **Minimal permissions** — Only requests playback control scopes
+- Authentication uses OAuth2 with PKCE — no client secret is stored or transmitted
+- Tokens are stored locally on your machine at `~/.tune/config.json`
+- Only playback-related API scopes are requested
 
 ---
 
-## 🛠️ Tech Stack
+## Stack
 
-| Component | Technology |
-| :--- | :--- |
+| Layer | Technology |
+| --- | --- |
 | CLI | Node.js, TypeScript, Commander.js |
 | API | Spotify Web API |
 | Auth | OAuth2 + PKCE |
@@ -101,16 +100,16 @@ tune focus
 
 ---
 
-## 📝 License
+## Contributing
 
-[MIT License](https://github.com/rithvikshettyy/DevTune/blob/main/tune/LICENSE.md)
-
----
-
-## 🤝 Contributing
-
-Found a bug or have a feature idea? Open an issue or PR on [GitHub](https://github.com/rithvikshettyy/DevTune).
+Issues and pull requests are welcome on [GitHub](https://github.com/rithvikshettyy/DevTune).
 
 ---
 
-**Built with 💜 by [Rithvik Shetty](https://github.com/rithvikshettyy)**
+## License
+
+MIT — see [LICENSE](https://github.com/rithvikshettyy/DevTune/blob/main/tune/LICENSE.md)
+
+---
+
+Built by [Rithvik Shetty](https://github.com/rithvikshettyy)
