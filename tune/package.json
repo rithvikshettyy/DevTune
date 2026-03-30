@@ -1,0 +1,42 @@
+{
+  "name": "devtune",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.14.0",
+    "chalk": "^4.1.2",
+    "commander": "^14.0.3",
+    "conf": "^15.1.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "lodash": "^4.17.23",
+    "node-notifier": "^10.0.1",
+    "open": "^11.0.0",
+    "ora": "^5.4.1",
+    "pkce-challenge": "^6.0.0",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/lodash": "^4.17.24",
+    "@types/node": "^25.5.0",
+    "@types/node-notifier": "^8.0.5",
+    "@types/spotify-web-api-node": "^5.0.11",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  },
+  "bin": {
+    "tune": "./dist/index.js"
+  }
+}

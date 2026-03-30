@@ -1,0 +1,68 @@
+{
+  "name": "tune-vscode",
+  "displayName": "Tune CLI (VS Code)",
+  "description": "Control Spotify from your status bar - powered by Tune CLI.",
+  "version": "1.0.0",
+  "publisher": "tune",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "tune.play",
+        "title": "Tune: Play/Pause",
+        "icon": "$(play-circle)"
+      },
+      {
+        "command": "tune.next",
+        "title": "Tune: Next Track",
+        "icon": "$(chevron-right)"
+      },
+      {
+        "command": "tune.prev",
+        "title": "Tune: Previous Track",
+        "icon": "$(chevron-left)"
+      },
+      {
+        "command": "tune.status",
+        "title": "Tune: Show Status"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "tune.play"
+        },
+        {
+          "command": "tune.next"
+        },
+        {
+          "command": "tune.prev"
+        },
+        {
+          "command": "tune.status"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^16.x",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^4.9.4"
+  },
+  "license": "MIT",
+  "icon": "icon.png"
+}

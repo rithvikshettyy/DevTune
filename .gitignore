@@ -1,0 +1,15 @@
+# Tune Project - Secret and Build Ignore
+node_modules/
+dist/
+out/
+.env
+.DS_Store
+*.vsix
+.vscode-test/
+LICENSE.md
+config.json
+.tune/
+# Build outputs
+*.js
+*.js.map
+*.d.ts
