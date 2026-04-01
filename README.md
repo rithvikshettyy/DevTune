@@ -1,63 +1,64 @@
-# 🎵 DevTune — Control Spotify From Your Terminal & IDE
+# DevTune
 
-DevTune is a developer-first music controller that lets you search, play, pause, skip, and manage Spotify — all without leaving your terminal or code editor.
+DevTune is a high-performance music controller designed for professional developers. It enables seamless management of Spotify playback, including track discovery, volume modulation, and queue management, directly from the command line or integrated development environment.
 
-Built for developers who want their music to feel like a native part of their workflow.
-
----
-
-## ✨ Features
-
-### CLI (`tune`)
-- 🔍 **Search & Play** — Find any song and start playing instantly
-- ⏯️ **Playback Controls** — Play, pause, skip, go back
-- 🔊 **Volume Control** — Set volume from 0–100
-- 📊 **Now Playing** — See the current track, artist, and album
-- 📋 **Queue Management** — Add songs to queue and view upcoming tracks
-- 🧘 **Focus Mode** — One command to start your deep-work playlist
-- 🔥 **Hype Mode** — Energetic playlist for when you're shipping fast
-- 🔐 **Secure Auth** — OAuth2 with PKCE (no client secret needed)
-
-### VS Code Extension (`tune-vscode`)
-- 🎵 **Status Bar Integration** — See what's playing at the bottom of VS Code
-- ⏮️ ⏯️ ⏭️ **Quick Controls** — Play, pause, skip from the Command Palette
-- 🔄 **Auto-Refresh** — Track info updates every 15 seconds
-- 🚀 **Zero Config** — Works automatically if the CLI is set up
+DevTune is engineered for developers who prioritize efficiency and wish to integrate their auditory workspace into their primary technical environment.
 
 ---
 
-## 📦 Installation
+## Technical Capabilities
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) v18 or higher
-- A [Spotify Premium](https://www.spotify.com/premium/) account (required for playback control)
-- A [Spotify Developer App](https://developer.spotify.com/dashboard) (free, takes 2 minutes)
+### CLI (tune)
+- **Search & Play** — Discover and execute playback for any track instantly.
+- **Playback Control** — Comprehensive controls for pausing, resuming, and skipping tracks.
+- **Volume Regulation** — Precise volume adjustment within a 0–100 range.
+- **Status Monitoring** — Real-time metadata acquisition including track titles, artists, and albums.
+- **Queue Management** — Direct interface for adding tracks to the queue and viewing upcoming selections.
+- **Focus Mode** — Programmatic activation of deep-work environments.
+- **Hype Mode** — Execution of high-tempo auditory environments for rapid deployment cycles.
+- **Secure Authentication** — Enterprise-grade OAuth2 integration with PKCE.
 
----
-
-### Step 1: Create a Spotify App
-
-1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Click **"Create App"**
-3. Fill in:
-   - **App Name:** `DevTune` (or anything you like)
-   - **App Description:** `CLI and IDE music controller for developers`
-   - **Redirect URI:** `http://127.0.0.1:8888/callback`
-4. Check **"Web API"** and click **Save**
-5. Copy your **Client ID** from the app settings page
+### VS Code Extension (tune-vscode)
+- **Status Bar Integration** — Persistent track telemetry integrated into the editor workspace.
+- **Unified Controls** — Native Command Palette integration for playback operations.
+- **Automated Synchronization** — Real-time track information updates.
+- **Automated Configuration** — Zero-configuration deployment upon CLI initialization.
 
 ---
 
-### Step 2: Install the Extension & CLI
+## Installation
+
+Get started in less than 30 seconds:
+
+### Step 1: Install the Extension & CLI
 
 1. Search for **"Tune CLI"** in the VS Code Extensions view and install it.
 2. Once installed, the extension will check if the `tune` CLI is available.
 3. If not found, a notification will appear. Click **"Install Now"** or press `Ctrl+Shift+P` and search for **`Tune: Run Setup Wizard`**.
 
+---
+
+### Step 2: Login & Play!
+
 The Setup Wizard will guide you through:
 - **Installing the CLI** (`npm install -g @rithvik7/devtune`)
-- **Setting your Spotify Client ID**
-- **Logging in to Spotify**
+- **Logging in to Spotify** (`tune login`)
+
+That's it! No manually creating Spotify apps or copying Client IDs required.
+
+---
+
+## Advanced Setup
+
+If you prefer to use your own Spotify Developer App for dedicated rate limits or privacy:
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and Create an App.
+2. Set the **Redirect URI** to `http://127.0.0.1:8888/callback`.
+3. Copy your **Client ID** and set it in the CLI:
+   ```bash
+   tune config set clientId YOUR_CLIENT_ID
+   ```
+4. Run `tune login` to re-authenticate with your own credentials.
 
 ---
 
@@ -70,7 +71,7 @@ After setup, you're ready to go!
 
 ---
 
-## 🎮 CLI Commands
+## CLI Commands
 
 | Command | What It Does |
 | :--- | :--- |
@@ -84,8 +85,8 @@ After setup, you're ready to go!
 | `tune volume <0-100>` | Set the playback volume |
 | `tune status` | Show the currently playing track |
 | `tune search <query>` | Search for tracks and list results |
-| `tune focus` | Start your Focus playlist 🧘 |
-| `tune hype` | Start your Hype playlist 🔥 |
+| `tune focus` | Start Focus playlist |
+| `tune hype` | Start Hype playlist |
 | `tune login` | Authenticate with Spotify |
 | `tune logout` | Clear saved tokens |
 | `tune config set <key> <value>` | Update a config setting |
@@ -94,48 +95,45 @@ After setup, you're ready to go!
 ### Examples
 
 ```bash
-# Play a song
-tune play "Blinding Lights"
+# Execute playback
+tune play "Track Name"
 
-# Play a song by a specific artist
-tune play "Heathens twenty one pilots"
+# Artist-specific search
+tune play "Artist Name - Track Name"
 
-# Set volume to 50%
+# Adjust volume
 tune volume 50
 
-# Check what's playing
+# Retrieve current status
 tune status
 
-# Queue up songs
-tune queue "Heathens twenty one pilots"
-tune queue "The Nights Avicii"
+# Manage queue
+tune queue "Track Name"
 
-# View the queue
+# View upcoming tracks
 tune queue-list
 
-# Enter focus mode
+# Initialize focus environment
 tune focus
 ```
 
 ---
 
-## 🎨 Custom Playlists
+## Custom Playlists
 
-You can set your own playlists for Focus, Hype, and Chill modes.
+Users may configure designated playlists for Focus and Hype environments.
 
-1. Open Spotify and find a playlist you love
-2. Right-click the playlist → **Share** → **Copy Spotify URI**
-3. Set it in your config:
+1. Obtain the Spotify URI for the desired playlist.
+2. Update the local configuration:
 
 ```bash
-tune config set focus spotify:playlist:YOUR_PLAYLIST_ID
-tune config set hype spotify:playlist:YOUR_PLAYLIST_ID
-tune config set chill spotify:playlist:YOUR_PLAYLIST_ID
+tune config set focus spotify:playlist:PLAYLIST_ID
+tune config set hype spotify:playlist:PLAYLIST_ID
 ```
 
 ---
 
-## 🖥️ VS Code Extension
+## VS Code Extension
 
 The VS Code extension adds a **live status bar** at the bottom of your editor showing the currently playing track, and lets you control playback from the Command Palette.
 
@@ -161,7 +159,7 @@ Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) and type **"Tune"**:
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 DevTune/
@@ -196,7 +194,7 @@ DevTune/
 
 ---
 
-## 🔐 Security
+## Security
 
 - **OAuth2 + PKCE:** No client secret is stored or transmitted. The PKCE flow ensures secure authentication even for public clients like CLI tools.
 - **Local Token Storage:** Access and refresh tokens are stored locally at `~/.tune/config.json` on your machine. They are never committed to Git.
@@ -207,7 +205,7 @@ DevTune/
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 All settings are stored in `~/.tune/config.json`:
 
@@ -224,7 +222,7 @@ All settings are stored in `~/.tune/config.json`:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology |
 | :--- | :--- |
@@ -238,13 +236,13 @@ All settings are stored in `~/.tune/config.json`:
 
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the [MIT License](./tune/LICENSE.md).
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to open an issue or submit a pull request.
 
@@ -256,4 +254,4 @@ Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ---
 
-**Built with 💜 by [@rithvikshettyy](https://github.com/rithvikshettyy)**
+**Developed by [Rithvik Shetty](https://github.com/rithvikshettyy)**

@@ -42,17 +42,20 @@ All controls are accessible via `Ctrl+Shift+P`:
 
 Press `Ctrl+Shift+P` and search for **`Tune: Run Setup Wizard`**.
 
-The Setup Wizard will guide you through:
-- **Installing the CLI** (`npm install -g @rithvik7/devtune`)
-- **Setting your Spotify Client ID**
-- **Logging in to Spotify**
+The Setup Wizard will facilitate the deployment process:
+- **Installing the CLI** (npm install -g @rithvik7/devtune)
+- **Authenticating with Spotify** (tune login)
 
-Alternatively, you can install the CLI manually:
+Standard CLI deployment instructions:
 
 ```bash
 npm install -g @rithvik7/devtune
-tune config set clientId YOUR_CLIENT_ID
 tune login
+```
+
+Optional: To use a custom Spotify Developer Application:
+```bash
+tune config set clientId YOUR_CLIENT_ID
 ```
 
 The extension will begin working immediately after authentication.

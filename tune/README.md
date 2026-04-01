@@ -1,33 +1,27 @@
-# 🎵 Tune CLI
+# Tune CLI
 
 Control Spotify from your terminal like a native developer tool. Built with Node.js, TypeScript, and Commander.
 
-## 🚀 Features
+## Features
 
 - **Full Control:** Play, pause, skip, and volume control.
 - **Search:** Find and play any track instantly.
-- **Modes:** Focus (🧘) and Hype (🔥) modes for deep work or energetic coding.
-- **Secure:** OAuth2 with PKCE (no client secret needed).
-- **Fast:** Clean and minimal output for terminal gurus.
+- **Modes:** Professional environments for Focus and Hype modes.
+- **Security:** OAuth2 integration with PKCE.
+- **Efficiency:** Minimalist output optimized for terminal environments.
 
-## 🛠 Setup
+## Setup
 
-### 1. Register Spotify App
-1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-2. Create a new App (e.g., "Tune CLI").
-3. Set the **Redirect URI** to: `http://localhost:8888/callback`.
-4. Copy your **Client ID**.
-
-### 2. Configure CLI
+### 1. Login to Spotify
+Simply run the login command to authenticate instantly:
 ```bash
-# Set your Client ID
-tune config set clientId YOUR_CLIENT_ID
-
-# Login to Spotify (opens browser)
 tune login
 ```
+This will open your browser to authorize DevTune.
 
-## 📖 Commands
+---
+
+## Commands
 
 | Command | Description |
 | --- | --- |
@@ -41,15 +35,25 @@ tune login
 | `tune hype` | Play your Hype playlist |
 | `tune logout` | Clear your authentication tokens |
 
-## ⚙️ Configuration
+---
 
+## Configuration
+
+### Custom Playlists
 Store your own favorite playlist URIs (right-click playlist in Spotify -> Share -> Copy URI):
 ```bash
 tune config set focus spotify:playlist:YOUR_PLAYLIST_URI
 tune config set hype spotify:playlist:YOUR_PLAYLIST_URI
 ```
 
-## 🏗 Installation
+### Advanced: Custom Client ID
+If you want to use your own Spotify Developer App credentials:
+```bash
+tune config set clientId YOUR_CLIENT_ID
+```
+Then run `tune login` again to re-authenticate.
+
+## Installation
 
 To use it globally, run:
 ```bash

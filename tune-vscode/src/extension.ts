@@ -181,10 +181,10 @@ async function runSetup() {
 	const step = await vscode.window.showQuickPick(
 		[
 			{ label: '1. Install Tune CLI', description: 'Runs npm install -g @rithvik7/devtune', action: 'install' },
-			{ label: '2. Set Spotify Client ID', description: 'Configure your Spotify Developer App ID', action: 'config' },
-			{ label: '3. Login to Spotify', description: 'Authenticate with your account', action: 'login' }
+			{ label: '2. Login to Spotify', description: 'Connect your account instantly', action: 'login' },
+			{ label: 'Advanced Configuration', description: 'Configure a custom Spotify Developer Application', action: 'config' }
 		],
-		{ placeHolder: 'Tune Setup: Choose a step' }
+		{ placeHolder: 'Tune Setup: Deployment interface' }
 	);
 
 	if (!step) return;
@@ -194,16 +194,14 @@ async function runSetup() {
 	} else if (step.action === 'config') {
 		const clientId = await vscode.window.showInputBox({
 			prompt: 'Enter your Spotify Client ID',
-			placeHolder: 'From Spotify Developer Dashboard'
+			placeHolder: 'e.g. 7d341998599d424b896894c798083884',
+			ignoreFocusOut: true
 		});
 		if (clientId) {
-			exec(`tune config set clientId ${clientId}`, (err) => {
-				if (err) {
-					vscode.window.showErrorMessage(`Failed to set Client ID: ${err.message}`);
-				} else {
-					vscode.window.showInformationMessage('Client ID set successfully!');
-				}
-			});
+			const terminal = vscode.window.createTerminal('Tune Config');
+			terminal.show();
+			terminal.sendText(`tune config set clientId ${clientId}`);
+			vscode.window.showInformationMessage('Spotify Client ID updated! Now you can proceed to login.');
 		}
 	} else if (step.action === 'login') {
 		loginTune();
@@ -360,9 +358,15 @@ class TunePlayerViewProvider implements vscode.WebviewViewProvider {
 			<div class="track-artist" id="trackArtist">Open Spotify to start</div>
 		</div>
 		<div class="controls">
-			<button class="ctrl-btn" onclick="send('prev')" title="Previous">&#9198;</button>
-			<button class="ctrl-btn primary" onclick="send('play')" id="playBtn" title="Play/Pause">&#9654;</button>
-			<button class="ctrl-btn" onclick="send('next')" title="Next">&#9197;</button>
+			<button class="ctrl-btn" onclick="send('prev')" title="Previous">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2v12h2V2H4zm9 0l-6 6 6 6V2z"/></svg>
+			</button>
+			<button class="ctrl-btn primary" onclick="send('play')" id="playBtn" title="Play/Pause">
+				<svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2l10 6-10 6V2z"/></svg>
+			</button>
+			<button class="ctrl-btn" onclick="send('next')" title="Next">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12 2v12h-2V2h2zM3 2l6 6-6 6V2z"/></svg>
+			</button>
 		</div>
 		<div class="divider"></div>
 		<button class="search-btn" onclick="send('search')">Search for a song...</button>

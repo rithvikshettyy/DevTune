@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name('tune')
   .description('Control Spotify from the terminal')
-  .version('1.0.0');
+  .version('1.6.2');
 
 // Login Command
 program
