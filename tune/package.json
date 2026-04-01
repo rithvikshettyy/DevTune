@@ -1,12 +1,23 @@
 {
-  "name": "devtune",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@rithvik7/devtune",
+  "version": "1.1.2",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rithvikshettyy/DevTune.git",
+    "directory": "tune"
   },
   "keywords": [],
   "author": "",

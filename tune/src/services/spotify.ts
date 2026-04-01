@@ -14,9 +14,26 @@ class SpotifyService {
     this.api.setAccessToken(accessToken);
   }
 
+  private async getActiveDeviceIdMaybe(): Promise<string | undefined> {
+    const response = await this.api.getMyDevices();
+    const devices = response.body.devices;
+    if (devices.length === 0) return undefined;
+    const active = devices.find(d => d.is_active);
+    if (active) return active.id || undefined;
+    return devices[0].id || undefined;
+  }
+
   async play(songName?: string) {
     await this.initialize();
     
+    const playOptions: any = {};
+    
+    // First, let's try to find an active (or any) device if Spotify doesn't see one active
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    if (deviceId) {
+      playOptions.device_id = deviceId;
+    }
+
     if (songName) {
       const searchResult = await this.api.searchTracks(songName, { limit: 1 });
       const tracks = searchResult.body.tracks?.items;
@@ -24,31 +41,50 @@ class SpotifyService {
         throw new Error(`Song "${songName}" not found.`);
       }
       const trackUri = tracks[0].uri;
-      await this.api.play({ uris: [trackUri] });
-      return tracks[0];
+      try {
+        await this.api.play({ uris: [trackUri], ...playOptions });
+        return tracks[0];
+      } catch (error: any) {
+         // If it failed even with a device_id, it might be something else
+         throw error;
+      }
     } else {
-      await this.api.play();
+      await this.api.play(playOptions);
     }
   }
 
   async pause() {
     await this.initialize();
-    await this.api.pause();
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.pause(deviceId ? { device_id: deviceId } : {});
+  }
+
+  async toggle() {
+    await this.initialize();
+    const data = await this.status();
+    if (data && data.is_playing) {
+      await this.pause();
+    } else {
+      await this.play();
+    }
   }
 
   async next() {
     await this.initialize();
-    await this.api.skipToNext();
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.skipToNext(deviceId ? { device_id: deviceId } : {});
   }
 
   async prev() {
     await this.initialize();
-    await this.api.skipToPrevious();
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.skipToPrevious(deviceId ? { device_id: deviceId } : {});
   }
 
   async setVolume(volume: number) {
     await this.initialize();
-    await this.api.setVolume(volume);
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.setVolume(volume, deviceId ? { device_id: deviceId } : {});
   }
 
   async search(query: string) {
@@ -71,8 +107,11 @@ class SpotifyService {
     }
 
     const playlistUri = playlists[type];
-    // Start playback for context (playlist)
-    await this.api.play({ context_uri: playlistUri });
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.play({ 
+        context_uri: playlistUri,
+        ...(deviceId ? { device_id: deviceId } : {})
+    });
   }
 
   async queueTrack(songName: string) {
@@ -83,7 +122,8 @@ class SpotifyService {
       throw new Error(`Song "${songName}" not found.`);
     }
     const track = tracks[0];
-    await this.api.addToQueue(track.uri);
+    const deviceId = await this.getActiveDeviceIdMaybe();
+    await this.api.addToQueue(track.uri, deviceId ? { device_id: deviceId } : {});
     return track;
   }
 

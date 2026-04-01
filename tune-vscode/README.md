@@ -40,19 +40,17 @@ All controls are accessible via `Ctrl+Shift+P`:
 
 ## Setup
 
-Clone the repository and install the CLI:
+Press `Ctrl+Shift+P` and search for **`Tune: Run Setup Wizard`**.
+
+The Setup Wizard will guide you through:
+- **Installing the CLI** (`npm install -g @rithvik7/devtune`)
+- **Setting your Spotify Client ID**
+- **Logging in to Spotify**
+
+Alternatively, you can install the CLI manually:
 
 ```bash
-git clone https://github.com/rithvikshettyy/DevTune.git
-cd DevTune/tune
-npm install
-npm run build
-npm link
-```
-
-Create a Spotify app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) with redirect URI `http://127.0.0.1:8888/callback`, then configure and authenticate:
-
-```bash
+npm install -g @rithvik7/devtune
 tune config set clientId YOUR_CLIENT_ID
 tune login
 ```

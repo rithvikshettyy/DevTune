@@ -48,36 +48,25 @@ Built for developers who want their music to feel like a native part of their wo
 
 ---
 
-### Step 2: Install the CLI
+### Step 2: Install the Extension & CLI
 
-```bash
-# Clone the repository
-git clone https://github.com/rithvikshettyy/DevTune.git
-cd DevTune/tune
+1. Search for **"Tune CLI"** in the VS Code Extensions view and install it.
+2. Once installed, the extension will check if the `tune` CLI is available.
+3. If not found, a notification will appear. Click **"Install Now"** or press `Ctrl+Shift+P` and search for **`Tune: Run Setup Wizard`**.
 
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
-
-# Link it globally so you can use "tune" from anywhere
-npm link
-```
+The Setup Wizard will guide you through:
+- **Installing the CLI** (`npm install -g @rithvik7/devtune`)
+- **Setting your Spotify Client ID**
+- **Logging in to Spotify**
 
 ---
 
-### Step 3: Configure & Login
+### Step 3: Start Playing!
 
-```bash
-# Set your Spotify Client ID
-tune config set clientId YOUR_CLIENT_ID_HERE
-
-# Authenticate with Spotify (opens your browser)
-tune login
-```
-
-A browser window will open asking you to authorize DevTune. Click **"Agree"** and you're done! The window will confirm: *"Authentication successful!"*
+After setup, you're ready to go!
+- Use the **Player** in the Activity Bar.
+- Use the **Status Bar** at the bottom for quick track info.
+- Search for songs using **`Tune: Search & Play`**.
 
 ---
 

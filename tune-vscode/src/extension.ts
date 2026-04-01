@@ -19,9 +19,12 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.registerWebviewViewProvider('tune.playerView', provider)
 	);
 
+	// Check if CLI is installed
+	checkTuneCli(false);
+
 	// Commands
 	context.subscriptions.push(vscode.commands.registerCommand('tune.play', async () => {
-		exec('tune pause', (err) => {
+		exec('tune toggle', (err) => {
 			if (err) vscode.window.showErrorMessage(`Tune: ${err.message}`);
 			setTimeout(() => { updateStatus(provider); }, 1000);
 		});
@@ -62,6 +65,18 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand('tune.install', async () => {
+		installTuneCli();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('tune.login', async () => {
+		loginTune();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('tune.setup', async () => {
+		runSetup();
+	}));
+
 	// Poll every 10 seconds
 	setInterval(() => updateStatus(provider), 10000);
 
@@ -71,7 +86,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 function updateStatus(provider: TunePlayerViewProvider, showPopup: boolean = false) {
 	exec('tune status', (err, stdout) => {
-		if (err || !stdout) {
+		if (err) {
+			currentTitle = '';
+			currentArtist = '';
+			isPlaying = false;
+			
+			// Check if it's a "command not found" error
+			if (err.message.includes('not recognized') || err.message.includes('not found')) {
+				statusBarItem.text = `$(warning) Tune: CLI Missing`;
+				statusBarItem.tooltip = 'Click to install Tune CLI';
+				statusBarItem.command = 'tune.setup';
+			} else {
+				statusBarItem.text = `$(music) Tune: Idle`;
+				statusBarItem.tooltip = 'Tune is idle';
+				statusBarItem.command = 'tune.status';
+			}
+			
+			statusBarItem.show();
+			provider.updatePlayer('', '', false);
+			return;
+		}
+
+		if (!stdout || stdout.includes('No track is currently playing')) {
 			currentTitle = '';
 			currentArtist = '';
 			isPlaying = false;
@@ -107,6 +143,71 @@ function updateStatus(provider: TunePlayerViewProvider, showPopup: boolean = fal
 
 		provider.updatePlayer(title, artist, isPlaying);
 	});
+}
+
+async function checkTuneCli(showSuccess: boolean = true) {
+	exec('tune --version', (err) => {
+		if (err) {
+			vscode.window.showWarningMessage(
+				'Tune CLI is not installed. It is required for this extension to work.',
+				'Install Now',
+				'More Info'
+			).then(selection => {
+				if (selection === 'Install Now') {
+					runSetup();
+				} else if (selection === 'More Info') {
+					vscode.env.openExternal(vscode.Uri.parse('https://github.com/rithvikshettyy/DevTune'));
+				}
+			});
+		} else if (showSuccess) {
+			vscode.window.showInformationMessage('Tune CLI is correctly installed!');
+		}
+	});
+}
+
+function installTuneCli() {
+	const terminal = vscode.window.createTerminal('Install Tune');
+	terminal.show();
+	terminal.sendText('npm install -g @rithvik7/devtune');
+}
+
+function loginTune() {
+	const terminal = vscode.window.createTerminal('Tune Login');
+	terminal.show();
+	terminal.sendText('tune login');
+}
+
+async function runSetup() {
+	const step = await vscode.window.showQuickPick(
+		[
+			{ label: '1. Install Tune CLI', description: 'Runs npm install -g @rithvik7/devtune', action: 'install' },
+			{ label: '2. Set Spotify Client ID', description: 'Configure your Spotify Developer App ID', action: 'config' },
+			{ label: '3. Login to Spotify', description: 'Authenticate with your account', action: 'login' }
+		],
+		{ placeHolder: 'Tune Setup: Choose a step' }
+	);
+
+	if (!step) return;
+
+	if (step.action === 'install') {
+		installTuneCli();
+	} else if (step.action === 'config') {
+		const clientId = await vscode.window.showInputBox({
+			prompt: 'Enter your Spotify Client ID',
+			placeHolder: 'From Spotify Developer Dashboard'
+		});
+		if (clientId) {
+			exec(`tune config set clientId ${clientId}`, (err) => {
+				if (err) {
+					vscode.window.showErrorMessage(`Failed to set Client ID: ${err.message}`);
+				} else {
+					vscode.window.showInformationMessage('Client ID set successfully!');
+				}
+			});
+		}
+	} else if (step.action === 'login') {
+		loginTune();
+	}
 }
 
 class TunePlayerViewProvider implements vscode.WebviewViewProvider {
