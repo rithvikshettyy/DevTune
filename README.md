@@ -1,6 +1,6 @@
-# DevTune
+# Tune CLI
 
-DevTune is a high-performance music controller designed for professional developers. It enables seamless management of Spotify playback, including track discovery, volume modulation, and queue management, directly from the command line or integrated development environment.
+Tune is a high-performance music controller designed for professional developers. It enables seamless management of Spotify playback, including track discovery, volume modulation, and queue management, directly from the command line or integrated development environment.
 
 DevTune is engineered for developers who prioritize efficiency and wish to integrate their auditory workspace into their primary technical environment.
 
